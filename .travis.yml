@@ -55,7 +55,9 @@ script:
     if [[ "$CERES_BUILD_TARGET" == "IOS" ]]; then
       cmake -DCMAKE_TOOLCHAIN_FILE=$TRAVIS_BUILD_DIR/cmake/iOS.cmake -DEigen3_DIR=/usr/local/share/eigen3/cmake -DIOS_PLATFORM=OS $TRAVIS_BUILD_DIR
     fi
-  - make -j 4
+  # NOTE: Schur specialisations can slow compilation for longer than the default 10 mins on
+  #       a Travis build agent.
+  - travis_wait 20 make -j 4 VERBOSE=1
   - |
     if [[ "$CERES_BUILD_TARGET" == "LINUX" || "$CERES_BUILD_TARGET" == "OSX" ]]; then
       sudo make install
